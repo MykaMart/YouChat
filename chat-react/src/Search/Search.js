@@ -13,7 +13,6 @@ class Search extends Component {
 
 	search = (e) => {
 		e.preventDefault()
-		console.log(this.state.searchRequest)
 		this.props.search(this.state.searchRequest)
 	}
 

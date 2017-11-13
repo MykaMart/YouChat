@@ -11,7 +11,8 @@ class App extends Component {
     this.state = {
       loggedIn: false,
       username: "",
-      results: []
+      results: [],
+      rooms:[]
     }
   }
 
@@ -20,7 +21,6 @@ class App extends Component {
   }
 
   search = (query) => {
-    console.log(query)
     const q = query
     fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q="+q+"&key="+this.props.API_KEY)
       .then(res => res.json())
@@ -36,21 +36,17 @@ class App extends Component {
             channel: video.snippet.channelTitle,
             description: video.snippet.description
           })
+        return 
         })
         this.setState(state);
       });
-  }
-
-  list = (results) => {
-    fetch("https://www.googleapis.com/youtube/v3/videos")
-
   }
 
   render() {
     return (
       <div className="App">  
         
-        {!this.state.loggedIn ? <Main search={this.search} results={this.state.results}/> : <Login loggedIn={this.state.loggedIn}/>}
+        {!this.state.loggedIn ? <Main search={this.search} results={this.state.results} rooms={this.state.rooms}/>  : <Login loggedIn={this.state.loggedIn}/>}
 
       </div>
     );
