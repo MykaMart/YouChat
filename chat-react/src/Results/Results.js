@@ -5,20 +5,23 @@ class Results extends Component {
 	constructor () {
 		super();
 		this.state = {
-			results: []
+			results: [],
 		}
 	}
 
-	listRooms = (e) => {
+	// listRooms = (e) => {
+	// 	e.preventDefault()
+	// 	const state = this.state
+	// 	this.props.rooms.push(this.state.results[e.target.id].title)
+	// 	this.setState(state)
+	// }
+	showCreate = (e) => {
 		e.preventDefault()
 		const state = this.state
-		this.props.rooms.push(this.state.results[e.target.id].title)
+		this.props.videoData[0]= this.state.results[e.target.id]
+		console.log(typeof this.props.showCreate)
+		this.props.flipModal(true)
 		this.setState(state)
-	}
-	createRoom = (e) => {
-		e.preventDefault()
-		console.log(this.state.results[e.target.id])
-		
 	}
 
 	render () {
@@ -31,7 +34,7 @@ class Results extends Component {
 							<h4>{result.description}</h4>
 							<form>
 								<input className="create" name={i}/>
-								<button id={i} onClick={this.createRoom}>Create New Room</button>
+								<button id={i} onClick={this.showCreate}>Create New Room</button>
 							</form>
 				   </div>
 			})

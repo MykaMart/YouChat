@@ -11,13 +11,12 @@ class App extends Component {
     this.state = {
       loggedIn: false,
       username: "",
+      showCreate: false,
       results: [],
-      rooms:[]
+      rooms:[],
+      roomCreate: "",
+      videoData: []
     }
-  }
-
-  test = () => {
-
   }
 
   search = (query) => {
@@ -36,17 +35,79 @@ class App extends Component {
             channel: video.snippet.channelTitle,
             description: video.snippet.description
           })
-        return 
+        return console.log("fdfsdfsf")
         })
         this.setState(state);
       });
   }
 
+  createRoom = (name, priv, video) => {
+    const state = this.state
+
+    let inArray =  false
+    let index = ""
+
+    for (let i=0; i < state.rooms.length; i++) {
+      if (state.rooms.length === 0) {
+        state.rooms.push({
+                    id: video.id,
+                    title: video.title,
+                    thumbnail: video.thumbnail,
+                    channel: video.channel,
+                    description: video.description,
+                    vRooms:[{
+                        name: name,
+                        private: priv,
+                        users: []
+                    }]
+        })
+      } else {
+
+        if (state.rooms[i].id === video.id) {
+           inArray = true
+           index = i
+        }
+      }
+    }
+
+    if(!inArray) {
+       state.rooms.push({
+                    id: video.id,
+                    title: video.title,
+                    thumbnail: video.thumbnail,
+                    channel: video.channel,
+                    description: video.description,
+                    vRooms:[{
+                        name: name,
+                        private: priv,
+                        users: []
+                    }]
+        })
+    } else {
+      state.rooms[index].vRooms.push({
+                    name: name,
+                    private: priv,
+                    users: []
+      })
+    }
+
+    this.setState(state)
+    console.log(this.state.rooms)
+  }
+
+  flipModal = (toggle) => {
+    const state = this.state
+    state.showCreate = toggle
+    this.setState(state)
+    console.log(this.state.showCreate)
+  }
+
   render() {
+
     return (
       <div className="App">  
         
-        {!this.state.loggedIn ? <Main search={this.search} results={this.state.results} rooms={this.state.rooms}/>  : <Login loggedIn={this.state.loggedIn}/>}
+        {!this.state.loggedIn ? <Main search={this.search} results={this.state.results} rooms={this.state.rooms} showCreate={this.state.showCreate} createRoom={this.createRoom} videoData={this.state.videoData} flip={this.flipModal}/> : <Login loggedIn={this.state.loggedIn}/>}
 
       </div>
     );
