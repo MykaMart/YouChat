@@ -15,7 +15,10 @@ class App extends Component {
       results: [],
       rooms:[],
       roomCreate: "",
-      videoData: []
+      videoData: [],
+      currentRooms: [{name: "No Rooms"}],
+      chatRoom: "",
+      inRoom: false
     }
   }
 
@@ -56,9 +59,12 @@ class App extends Component {
                     channel: video.channel,
                     description: video.description,
                     vRooms:[{
+                        id: video.id,
+                        title: video.title,
                         name: name,
                         private: priv,
-                        users: []
+                        users: [],
+                        messages: []
                     }]
         })
       } else {
@@ -78,36 +84,81 @@ class App extends Component {
                     channel: video.channel,
                     description: video.description,
                     vRooms:[{
+                        id: video.id,
+                        title: video.title,
                         name: name,
                         private: priv,
-                        users: []
+                        users: [],
+                        messages: []
                     }]
         })
     } else {
       state.rooms[index].vRooms.push({
+                    id: video.id,
+                    title: video.title, 
                     name: name,
                     private: priv,
-                    users: []
+                    users: [],
+                    messages: []
       })
     }
-
+    this.state.showCreate = false
     this.setState(state)
-    console.log(this.state.rooms)
+  }
+
+  roomList = (id) => {
+    console.log("hitting roomList")
+    const state = this.state
+    let roomsData = ""
+    for (let i = 0; i < state.rooms.length; i++) {
+      console.log(state.rooms[i].id)
+      if (state.rooms[i].id === id){
+        roomsData = state.rooms[i].vRooms
+        state.currentRooms = roomsData
+        this.setState(state)
+        break
+      }else {
+        state.currentRooms = [{name: "No Rooms"}]
+        this.setState(state)
+      }
+    }
+    
+  }
+
+  enterRoom = (id, title, name, room) => {
+    const state = this.state
+    state.chatRoom = [{id: id, title: title, name: name, roomData: room}]
+    state.inRoom = true
+    this.setState(state)
+    console.log("state.chatRoom", this.state.chatRoom)
+  }
+
+  sendMessage = (user, message) => {
+    const state = this.state
+    state.chatRoom[0].roomData.messages.push({user: user, message: message})
+    this.setState(state)
   }
 
   flipModal = (toggle) => {
     const state = this.state
     state.showCreate = toggle
     this.setState(state)
-    console.log(this.state.showCreate)
+
+  }
+
+  userLogin = (username) => {
+    const state = this.state
+    state.username = username
+    state.loggedIn = true
+    this.setState(state)
   }
 
   render() {
-
+    console.log(this.state.currentRooms)
     return (
       <div className="App">  
         
-        {!this.state.loggedIn ? <Main search={this.search} results={this.state.results} rooms={this.state.rooms} showCreate={this.state.showCreate} createRoom={this.createRoom} videoData={this.state.videoData} flip={this.flipModal}/> : <Login loggedIn={this.state.loggedIn}/>}
+        {this.state.loggedIn ? <Main search={this.search} results={this.state.results} rooms={this.state.rooms} showCreate={this.state.showCreate} createRoom={this.createRoom} videoData={this.state.videoData} flip={this.flipModal} roomList={this.roomList} currentRooms={this.state.currentRooms} enterRoom={this.enterRoom} chatRoom={this.state.chatRoom} inRoom={this.state.inRoom} sendMessage={this.sendMessage} user={this.state.username}/> : <Login loggedIn={this.state.loggedIn} userLogin={this.userLogin}/>}
 
       </div>
     );

@@ -9,26 +9,30 @@ class Results extends Component {
 		}
 	}
 
-	// listRooms = (e) => {
-	// 	e.preventDefault()
-	// 	const state = this.state
-	// 	this.props.rooms.push(this.state.results[e.target.id].title)
-	// 	this.setState(state)
-	// }
+	listRooms = (e) => {
+		console.log("clicked list Rooms")
+		e.preventDefault()
+		const state = this.state
+		console.log(this.props.currentRooms)
+		this.props.roomList(state.results[e.target.id].id)
+		this.setState(state)
+
+	}
+
 	showCreate = (e) => {
+		console.log("Revealing modal")
 		e.preventDefault()
 		const state = this.state
 		this.props.videoData[0]= this.state.results[e.target.id]
-		console.log(typeof this.props.showCreate)
 		this.props.flipModal(true)
 		this.setState(state)
+
 	}
 
 	render () {
 		const results = this.props.results.map((result, i) => {
-			console.log(i)
 			this.state.results.push(result)
-			return <div key={i} onClick={this.listRooms}>
+			return <div key={i} id={i} onClick={this.listRooms}>
 							<img src={result.thumbnail} alt={result.title}/><h3>{result.title}</h3>
 							<h4>{result.channel}</h4>
 							<h4>{result.description}</h4>
@@ -41,6 +45,7 @@ class Results extends Component {
 		return (
 			
 			<div>
+				<h3>Results</h3>
 				{results}
 			</div>
 		)
